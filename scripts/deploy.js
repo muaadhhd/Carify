@@ -10,17 +10,21 @@ async function main() {
   const currentTimestampInSeconds = Math.round(Date.now() / 1000);
   const unlockTime = currentTimestampInSeconds + 60;
 
-  const lockedAmount = hre.ethers.utils.parseEther("0.001");
+  const NAME = "Carify"
+  const SYMBOL = "PASS"
+  const SPOTS = 100
 
-  const Lock = await hre.ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
+  const AMOUNT = hre.ethers.utils.parseEther("0.01");
 
-  await lock.deployed();
+  const Carify = await hre.ethers.getContractFactory("Carify");
+  const carify = await Carify.deploy(NAME, SYMBOL, SPOTS, AMOUNT);
+
+  await carify.deployed();
 
   console.log(
-    `Lock with ${ethers.utils.formatEther(
-      lockedAmount
-    )}ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`
+    `Carify with ${ethers.utils.formatEther(
+      AMOUNT
+    )}ETH and unlock timestamp ${unlockTime} deployed to ${carify.address}`
   );
 }
 

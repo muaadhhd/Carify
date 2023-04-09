@@ -32,12 +32,12 @@ describe("Carify", function () {
   })
 
   describe("Deployment", function () {
-    it("Sets the name", async () => {
+    it("1. Sets the name", async () => {
       const result = await carify.name()
       expect(result).to.equal(NAME)
     })
 
-    it("Sets the symbol and owner", async () => {
+    it("2. Sets the symbol and owner", async () => {
       const result = await carify.symbol()
       expect(result).to.equal(SYMBOL)
 
@@ -45,12 +45,12 @@ describe("Carify", function () {
       expect(result2).to.equal(deployer.address)
     })
 
-    it("Sets the price", async () => {
+    it("3. Sets the price", async () => {
       const result = await carify.price()
       expect(result).to.equal(AMOUNT)
     })
 
-    it('Returns total spots', async () => {
+    it('4. Returns total spots', async () => {
       const result = await carify.maxSpots()
       expect(result).to.be.equal(spots)
     })
@@ -65,12 +65,12 @@ describe("Carify", function () {
       await transaction.wait()
     })
 
-    it('Returns total passHolders', async () => {
+    it('1. Returns total passHolders', async () => {
       const result = await carify._tokenIdCounter()
       expect(result).to.be.equal(1)
     })
 
-    it('Returns Pass Holder info', async () => {
+    it('2. Returns Pass Holder info', async () => {
       const pass = await carify.getPass("CRJB976")
       expect(pass.id).to.be.equal(1)
       expect(pass.licensePlate).to.be.equal('CRJB976')
@@ -78,28 +78,28 @@ describe("Carify", function () {
       expect(pass.isOwned).to.be.equal(true)
     })
 
-    it('Checks if pass is owned', async () => {
+    it('3. Checks if pass is owned', async () => {
       const result = await carify.isOwned("CRJB976")
       expect(result).to.equal(true)
     })
 
-    it('Checks if pass is valid', async () => {
+    it('4. Checks if pass is valid', async () => {
       const result = await carify.isPassValid("CRJB976")
       expect(result).to.equal(true)
     })
 
-    it('Checks if Parking Lot is full', async () => {
+    it('5. Checks if Parking Lot is full', async () => {
       const result = await carify.isFull()
       expect(result).to.equal(false)
 
     })
 
-    it("Renewing pass", async () => {
+    it("6. Renewing pass", async () => {
       const result = await carify.renew("CRJB976", { value: AMOUNT })
       await result.wait()
     })
 
-    it("Canceling pass by owner of token", async () => {
+    it("7. Canceling pass by owner of token", async () => {
       const buy = await carify.connect(user).buyPass("CRJB977", { value: AMOUNT })
       const pass = await carify.getPass("CRJB976")
 
@@ -119,7 +119,7 @@ describe("Carify", function () {
 
     })
 
-    it("Transfers pass to different owner", async () => {
+    it("1. Transfers pass to different owner", async () => {
       const pass = await carify.getPass("CRJB976");
       await carify.connect(user).transferPass(user2.address, pass.id)
 
@@ -141,14 +141,14 @@ describe("Carify", function () {
 
     })
 
-    it("Getting balance of contract", async () => {
+    it("1. Getting balance of contract", async () => {
       const balance = await ethers.provider.getBalance(carify.address);
       let finalBalance = balance
       console.log(`${finalBalance} ETH`)
 
     })
 
-    it('Updates the owner balance', async () => {
+    it('2. Updates the owner balance', async () => {
 
       transaction = await carify.connect(deployer).withdraw()
       await transaction.wait()
@@ -160,7 +160,7 @@ describe("Carify", function () {
       expect(balanceAfter).to.be.greaterThan(balanceBefore)
     })
 
-    it('Updates the contract balance', async () => {
+    it('3. Updates the contract balance', async () => {
       transaction = await carify.connect(deployer).withdraw()
       await transaction.wait()
 
