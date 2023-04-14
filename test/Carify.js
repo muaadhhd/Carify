@@ -72,7 +72,7 @@ describe("Carify", function () {
 
     it('2. Returns Pass Holder info', async () => {
       const pass = await carify.getPass("CRJB976")
-      expect(pass.id).to.be.equal(1)
+      expect(pass.id).to.be.equal(0)
       expect(pass.licensePlate).to.be.equal('CRJB976')
       // expect(pass.expirationDate).to.be.equal(date.getTime)
       expect(pass.isOwned).to.be.equal(true)

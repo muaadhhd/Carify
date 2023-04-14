@@ -24,7 +24,7 @@ contract Carify is ERC721, Ownable {
     }
 
     mapping (string  => ParkingPass) public passHolder;
-    mapping(string => bool) private registeredLicensePlates;
+    // mapping(string => mapping(address => bool)) private registeredLicensePlates;
 
 
     constructor(string memory _name, string memory _symbol, uint256 _maxSpots, uint256 _price) 
@@ -40,7 +40,7 @@ contract Carify is ERC721, Ownable {
         require(!isOwned(_licensePlate), "Already Owned");
         require(msg.value >= price, "Amount is not sufficient");
 
-        uint256 newTokenId = _tokenIdCounter.current() + 1;
+        uint256 newTokenId = _tokenIdCounter.current();
 
         ParkingPass memory pass = ParkingPass(newTokenId, block.timestamp + 30, _licensePlate, true);
 
@@ -49,6 +49,8 @@ contract Carify is ERC721, Ownable {
         _safeMint(msg.sender, newTokenId);
 
         _tokenIdCounter.increment();
+
+        // registeredLicensePlates[_licensePlate][msg.sender] = true;
 
         passHolder[_licensePlate].isOwned = true;
 
@@ -75,6 +77,7 @@ contract Carify is ERC721, Ownable {
 
         delete passHolder[_licensePlate];
         _burn(_tokenId);
+        _tokenIdCounter.decrement();
     }
 
 

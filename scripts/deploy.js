@@ -14,7 +14,7 @@ async function main() {
   const SYMBOL = "PASS"
   const SPOTS = 100
 
-  const AMOUNT = hre.ethers.utils.parseEther("0.01");
+  const AMOUNT = hre.ethers.utils.parseEther("0.05");
 
   const Carify = await hre.ethers.getContractFactory("Carify");
   const carify = await Carify.deploy(NAME, SYMBOL, SPOTS, AMOUNT);
