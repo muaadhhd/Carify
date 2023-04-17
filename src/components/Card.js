@@ -1,14 +1,16 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
-import { ToastContainer, toast, Slide, Zoom, Flip, Bounce } from 'react-toastify';
+import { ToastContainer, toast, Flip} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const Card = ({carify, provider, price, setPasses, passes}) => {
+const Card = ({carify, provider, price, passes, setPasses, account, setAccount}) => {
   const [buy, setBuy] = useState(null);
   const [cancel, setCancel] = useState(null);
   const [transfer, setTransfer] = useState(null);
   const [renew, setRenew] = useState(null);
   const [address, setAddress] = useState(null);
+
+
 
     const success = async (e) => {
         toast.success(e, {
@@ -52,20 +54,32 @@ const Card = ({carify, provider, price, setPasses, passes}) => {
 
     const buyHandler = async () => {
         const owned = await carify.isOwned(buy)
+        const full = await carify.isFull()
 
         const signer = provider.getSigner();
 
         if (buy.trim().length !== 0) {
+            if(full){
+                alreadyOwned("Parking Lot full")
+            }
             if (owned !== true){
-                success("Success")
                 const transaction = await carify.connect(signer).buyPass(buy, { value: price });
                 await transaction.wait()
+                success("Success")
+                let pass = await carify.getPass(buy)
+                console.log(pass)
+                // passes.push(pass)
+                setPasses([...passes, pass])
+                console.log("Entire array", passes)
+
             }else{
                 alreadyOwned("Already Owned")
             }
-        } else {
-            empty("Empty")
-          }
+            } else {
+            empty("Empty") 
+            }
+
+        console.log(passes)
     }
 
     const cancelHandler = async () => {
@@ -78,7 +92,11 @@ const Card = ({carify, provider, price, setPasses, passes}) => {
                 try {
                     const pass = await carify.getPass(cancel)
                     console.log(pass.id)
-                    await carify.connect(signer).cancelPass(cancel, pass.id);
+                    const transaction = await carify.connect(signer).cancelPass(cancel, pass.id);
+                    await transaction.wait()
+                    // passes.pop(pass)
+                    setPasses(passes.filter(orig => orig.pass !== pass))
+
                     
                 } catch (error) {
                     alreadyOwned("Not the owner of the pass")   
@@ -91,6 +109,8 @@ const Card = ({carify, provider, price, setPasses, passes}) => {
         } else {
             empty("Empty")
         }
+
+        console.log("Entire array", passes)
 
     }
 
@@ -143,7 +163,28 @@ const Card = ({carify, provider, price, setPasses, passes}) => {
 
     }
 
+    const date = (d) => {
+        var date = new Date(d * 1000);
+
+        var iso = date.toISOString().match(/(\d{4}\-\d{2}\-\d{2})T(\d{2}:\d{2}:\d{2})/)
+
+
+        return <h2>{iso[1] + ' ' + iso[2]}</h2>
+
+    }
+
+    useEffect(()=> {
+        const data = window.localStorage.getItem('passes');
+        if (data != null) setPasses(JSON.parse(data))
+    },[])
+
+    useEffect(() => {
+        window.localStorage.setItem('passes', JSON.stringify(passes))
+        console.log(passes)
+    }, [passes])
+
     return (
+        
         <div className="container">
             <div className="login-box">
                 <h2>Buy</h2>
@@ -194,7 +235,6 @@ const Card = ({carify, provider, price, setPasses, passes}) => {
                             onChange={(e) => { setRenew(e.target.value) }}
                             />
                             <label>Renew Parking Pass</label>
-                            {/* <h1>{renew}</h1> */}
 
                             <a className="hover:bg-[#03e9f4]" onClick={renewHandler}>
                             <span></span>
@@ -206,6 +246,7 @@ const Card = ({carify, provider, price, setPasses, passes}) => {
                         </div>
                     </form>
             </div>
+
             <div className="login-box">
                 <h2>Transfer</h2>
                     <form>
@@ -226,6 +267,22 @@ const Card = ({carify, provider, price, setPasses, passes}) => {
                             Transfer Pass
                             </a>
                     </form>
+            </div>
+
+            <div className='login-box'>
+            <h2>Owned Parking Passes</h2>
+                <ul>
+                    {passes.map((pass, index) => (
+                        <li
+                        key={index}
+                        className='font font-mono text-white'
+                        >
+                            <h2>{pass.licensePlate} expire:{onchange = date(pass.expirationDate.toString())}</h2>
+                        </li>
+
+                    ))}
+                </ul>
+
             </div>
         </div>
     );

@@ -18,9 +18,9 @@ function App() {
   const [carify, setCarify] = useState(null)
 
   const [remainingSpots, setRemainingSpots] = useState(null)
-  const [passes, setPasses] = useState([])
   const [cost, setCost] = useState(null)
   const [price, setPrice] = useState(null)
+  const [passes, setPasses] = useState([])
   const [reducerValue, forceUpdate] = useReducer(x => x + 1, 0);
   
 
@@ -63,7 +63,7 @@ function App() {
 
   useEffect(() => {
     loadBlockchainData()
-
+    
   }, [reducerValue]) 
 
 
@@ -71,12 +71,12 @@ function App() {
 
     <div>
       <Navigation account={account} setAccount={setAccount}/>
-      <Card carify={carify} provider={provider} price ={price} setPasses={setPasses}
-      passes={passes}/>
+      <Card carify={carify} provider={provider} price ={price} passes={passes} setPasses={setPasses}
+      account={account} setAccount={setAccount}/>
 
       <div>
-        <h1 className='absolute font-mono font text-white'> {remainingSpots} Spots left</h1>
-        <p className='absolute font-mono font text-white'>PRICE: {cost} ETH</p>
+        <h1 className='translate-x-10 -translate-y-[500px] font-mono font text-white'> {remainingSpots} Spots left</h1>
+        <p className='translate-x-10 -translate-y-[500px] font-mono font text-white'>PRICE: {cost} ETH</p>
       </div>
     </div>
 

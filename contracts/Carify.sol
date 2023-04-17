@@ -42,7 +42,7 @@ contract Carify is ERC721, Ownable {
 
         uint256 newTokenId = _tokenIdCounter.current();
 
-        ParkingPass memory pass = ParkingPass(newTokenId, block.timestamp + 30, _licensePlate, true);
+        ParkingPass memory pass = ParkingPass(newTokenId, block.timestamp + 30 days, _licensePlate, true);
 
         passHolder[_licensePlate] = pass;
 
@@ -110,6 +110,7 @@ contract Carify is ERC721, Ownable {
  
     function withdraw() public onlyOwner 
     {
-        payable(owner()).transfer(address(this).balance);
+        (bool success, ) = msg.sender.call{value: address(this).balance}("");
+        require(success);
     }
 }

@@ -3,16 +3,15 @@
 @tailwind utilities;
 
 body {
-	margin:0;
-	padding:0;
 	font-family: sans-serif;
 	background: linear-gradient(#2A3166, white);
-	fill: linear-gradient(#2A3166, white);;
+	/* fill: linear-gradient(#2A3166, white); */
 
 }
 
 html {
 	height: 100%;
+
 }
 
 .side-by-side {
@@ -36,10 +35,8 @@ input {
 .font{
 	font-size:medium;
 	font-weight: bold;
-	position: relative; 
-	transform: translate(45%, -1000%);
-
-
+	/* position: relative;  */
+	/* transform: translate(45%, -1000%); */
 }
 
 .glowbutton {
@@ -106,7 +103,7 @@ input {
 
 .container{
 	display: grid;
-	grid-template-columns: repeat(2, 1fr);
+	grid-template-columns: repeat(3, 1fr);
 	gap: 30px;
 }
   

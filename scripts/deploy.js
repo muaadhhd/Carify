@@ -12,7 +12,7 @@ async function main() {
 
   const NAME = "Carify"
   const SYMBOL = "PASS"
-  const SPOTS = 100
+  const SPOTS = 10
 
   const AMOUNT = hre.ethers.utils.parseEther("0.05");
 
