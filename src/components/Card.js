@@ -1,16 +1,17 @@
-import { useEffect, useState } from 'react'
+import { ethers } from 'ethers'
+import { useState } from 'react'
 
-import { ToastContainer, toast, Flip} from 'react-toastify';
+import { ToastContainer, toast, Slide, Zoom, Flip, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const Card = ({carify, provider, price, passes, setPasses, account, setAccount}) => {
+const Card = ({carify, provider, price, passes, setPasses}) => {
   const [buy, setBuy] = useState(null);
   const [cancel, setCancel] = useState(null);
   const [transfer, setTransfer] = useState(null);
   const [renew, setRenew] = useState(null);
   const [address, setAddress] = useState(null);
 
-
+  
 
     const success = async (e) => {
         toast.success(e, {
@@ -67,17 +68,16 @@ const Card = ({carify, provider, price, passes, setPasses, account, setAccount})
                 await transaction.wait()
                 success("Success")
                 let pass = await carify.getPass(buy)
-                console.log(pass)
-                // passes.push(pass)
-                setPasses([...passes, pass])
+                passes.push(pass)
+                // setPasses(passes => [...passes, pass])
                 console.log("Entire array", passes)
 
             }else{
                 alreadyOwned("Already Owned")
             }
-            } else {
+        } else {
             empty("Empty") 
-            }
+        }
 
         console.log(passes)
     }
@@ -94,8 +94,8 @@ const Card = ({carify, provider, price, passes, setPasses, account, setAccount})
                     console.log(pass.id)
                     const transaction = await carify.connect(signer).cancelPass(cancel, pass.id);
                     await transaction.wait()
-                    // passes.pop(pass)
-                    setPasses(passes.filter(orig => orig.pass !== pass))
+                    passes.pop(pass)
+                    setPasses(passes)
 
                     
                 } catch (error) {
@@ -152,8 +152,10 @@ const Card = ({carify, provider, price, passes, setPasses, account, setAccount})
                 const result = await carify.connect(signer).renew(renew, { value: price })
                 await result.wait()
 
-                // const expiration = await carify.getPass(licensePlate).expirationDate
-                // setRenew(expiration)
+                const expiration = await carify.getPass(renew)
+                console.log(expiration.expirationDate)
+                
+                setRenew(date(expiration.expirationDate))
             } else{
                 alreadyOwned("License Plate Does Not Exist")
             }
@@ -168,20 +170,9 @@ const Card = ({carify, provider, price, passes, setPasses, account, setAccount})
 
         var iso = date.toISOString().match(/(\d{4}\-\d{2}\-\d{2})T(\d{2}:\d{2}:\d{2})/)
 
-
         return <h2>{iso[1] + ' ' + iso[2]}</h2>
 
     }
-
-    useEffect(()=> {
-        const data = window.localStorage.getItem('passes');
-        if (data != null) setPasses(JSON.parse(data))
-    },[])
-
-    useEffect(() => {
-        window.localStorage.setItem('passes', JSON.stringify(passes))
-        console.log(passes)
-    }, [passes])
 
     return (
         
@@ -191,7 +182,7 @@ const Card = ({carify, provider, price, passes, setPasses, account, setAccount})
                     <form>
                         <div className="user-box">
                             <input type="text" placeholder="Ex: BD5ISMR" maxLength="7"
-                            onChange={(e) => { setBuy(e.target.value) }}
+                            onChange={(e) => { setBuy(e.target.value.toUpperCase()) }}
                             
                             />
                             <ToastContainer transition={Flip}/>
@@ -212,7 +203,7 @@ const Card = ({carify, provider, price, passes, setPasses, account, setAccount})
                     <form>
                         <div className="user-box">
                             <input type="text" placeholder="Ex: BD5ISMR" maxLength="7"
-                            onChange={(e) => { setCancel(e.target.value) }}
+                            onChange={(e) => { setCancel(e.target.value.toUpperCase()) }}
                             />
                             <label>Cancel Parking Pass</label>
 
@@ -232,9 +223,10 @@ const Card = ({carify, provider, price, passes, setPasses, account, setAccount})
                     <form>
                         <div className="user-box">
                             <input type="text" placeholder="Ex: BD5ISMR" maxLength="7"
-                            onChange={(e) => { setRenew(e.target.value) }}
+                            onChange={(e) => { setRenew(e.target.value.toUpperCase()) }}
                             />
                             <label>Renew Parking Pass</label>
+                            {/* <h1>{renew}</h1> */}
 
                             <a className="hover:bg-[#03e9f4]" onClick={renewHandler}>
                             <span></span>
@@ -252,7 +244,7 @@ const Card = ({carify, provider, price, passes, setPasses, account, setAccount})
                     <form>
                         <div className="user-box side-by-side ">
                             <input type="text" placeholder="Ex: BD5ISMR" maxLength="7"
-                            onChange={(e) => { setTransfer(e.target.value) }}
+                            onChange={(e) => { setTransfer(e.target.value.toUpperCase()) }}
                             />
                             <label>Transfer Parking Pass</label>
                             <input className="" type="text" placeholder="Ex: 0x7099...79C8"
@@ -278,9 +270,13 @@ const Card = ({carify, provider, price, passes, setPasses, account, setAccount})
                         className='font font-mono text-white'
                         >
                             <h2>{pass.licensePlate} expire:{onchange = date(pass.expirationDate.toString())}</h2>
+                            
                         </li>
 
                     ))}
+                    <h2>New Exp Date:{renew}</h2>
+
+
                 </ul>
 
             </div>

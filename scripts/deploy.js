@@ -10,9 +10,9 @@ async function main() {
   const currentTimestampInSeconds = Math.round(Date.now() / 1000);
   const unlockTime = currentTimestampInSeconds + 60;
 
-  const NAME = "Carify"
-  const SYMBOL = "PASS"
-  const SPOTS = 10
+  const NAME = "Carify";
+  const SYMBOL = "PASS";
+  const SPOTS = 100;
 
   const AMOUNT = hre.ethers.utils.parseEther("0.05");
 

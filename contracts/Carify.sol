@@ -1,9 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-// Uncomment this line to use console.log
-import "hardhat/console.sol";
-
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
@@ -24,8 +21,6 @@ contract Carify is ERC721, Ownable {
     }
 
     mapping (string  => ParkingPass) public passHolder;
-    // mapping(string => mapping(address => bool)) private registeredLicensePlates;
-
 
     constructor(string memory _name, string memory _symbol, uint256 _maxSpots, uint256 _price) 
         ERC721(_name, _symbol) 
@@ -49,8 +44,6 @@ contract Carify is ERC721, Ownable {
         _safeMint(msg.sender, newTokenId);
 
         _tokenIdCounter.increment();
-
-        // registeredLicensePlates[_licensePlate][msg.sender] = true;
 
         passHolder[_licensePlate].isOwned = true;
 
