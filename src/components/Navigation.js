@@ -19,6 +19,7 @@ const Navigation = ({ account, setAccount }) => {
                 </a>
             </div>
             <div className='wrapper'>
+            <h2 className='absolute left-[500px] text-2xl top-[65px]'>Parking App</h2>
                 {account ? (
                     <button
                         type="button"
@@ -34,6 +35,7 @@ const Navigation = ({ account, setAccount }) => {
                     >
                         connect
                     </button>
+                    
                 )}
 
                 <div className='glowbutton absolute left-[900px]'>
