@@ -38,9 +38,9 @@ const Navigation = ({ account, setAccount }) => {
                     
                 )}
 
-                <div className='glowbutton absolute left-[900px]'>
+                <a href='https://github.com/muaadhhd' className='glowbutton absolute left-[900px]'>
                     About
-                </div>
+                </a>
 
             </div>
         </nav>
