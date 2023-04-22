@@ -14,6 +14,8 @@
 ## Requirements For Initial Setup
 
 - Install [NodeJS](https://nodejs.org/en/)
+- Install [Metamask] (https://metamask.io/download/)
+- Connect to the Sepolia Test Network
 
 ## Setting Up
 
